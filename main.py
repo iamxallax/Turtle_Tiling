@@ -44,17 +44,42 @@ def spiral(t, S, F, sides=3, inverted=False):
             t.left(A)
     t.setheading(0)
 
+def make_grid(S=200, rows=2, cols=4):
+    coords = []
+    inverted = True
+    for r in range(rows):
+        for c in range(cols):
+            xpos = ((c - 1) * S) - ((int(cols / 2) - 1) * S)
+            ypos = ((r - 1) - (int(rows / 2) - 1)) * S
+            if c == 0 and r != 0:
+                if cols % 2 == 0:
+                    inverted = inverted
+                else:
+                    inverted = not inverted
+            else:
+                inverted = not inverted
+            coords.append((xpos, ypos, inverted))
+    return coords
+
 screen = turtle.Screen()
 t = turtle.Turtle()
 t.speed(0)
 t.color('black')
 
-S = 200
+S = 150
 F = 10
 
-coords = [(0, 0, True), (0, -200, False), (-200, -200, True), (-200, 0, False), (-400, 0, True), (-400, -200, False), (200, -200, True), (200, 0, False)]
+#1, 1(-400, 0)
+#1, 2(-200, 0)
+#1, 3(0, 0)
+#1, 4(200, 0)
 
-#def make_grid(S, rows=2, cols=4):
+#2, 1(-400, -200)
+#2, 2(-200, -200)
+#2, 3(0, -200)
+#2, 4(200, -200)
+
+coords = make_grid(S, 4, 4)
 
 for x, y, inverted in coords:
     t.penup()
