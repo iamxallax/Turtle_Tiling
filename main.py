@@ -1,6 +1,7 @@
 from math import sin, cos, pi, asin
 import turtle
 import time
+import itertools
 
 class SavePosition:
     def __init__(self, t):
@@ -17,19 +18,20 @@ class SavePosition:
         t.pendown()
 
 
-
 def rad(deg):
     return deg*pi/180
 
 
 def deg(rad):
     return rad*180/pi
+
     
 def shape(t, S=200, sides=3):
     degrees = (sides - 2)*180
     for i in range(sides):
         t.forward(S)
         t.left(180-(degrees/sides))
+
 
 def calc(S, F, sides=3):
     int_angle = (sides - 2)*180/sides
@@ -70,75 +72,72 @@ def make_tri(t, S, rows, cols):
             else:
                 heading = 0
             
-            
 
 
+def tri_row(t, S, F, cols=1):
+    for c in range(cols):
+        with SavePosition(t):
+            t.forward(c * S)
+            lspiral(t, S, F)
+            t.left(60)
+            rspiral(t, S, F)
+    
+def tri_tile(t, S, F, rows=1, cols=1):
+    for r in range(rows):
+        with SavePosition(t):
+            tri_row(t, S, F, cols)
+        t.penup()
+        t.left(120)
+        t.forward(S)
+        t.pendown()
+        t.right(120)
 
-
-
-            
-            
-def make_grid(S=200, rows=2, cols=4):
-    coords = []
-    inverted = True
+def quad_tile(t, S, F, rows=1, cols=1):
     for r in range(rows):
         for c in range(cols):
-            xpos = ((c - 1) * S) - ((int(cols / 2) - 1) * S)
-            ypos = ((r - 1) - (int(rows / 2) - 1)) * S
-            if c == 0 and r != 0:
-                if cols % 2 == 0:
-                    inverted = inverted
+            with SavePosition(t):
+                t.forward(c * S)
+                if (r + c) % 2 == 0:
+                    lspiral(t, S, F, sides=4)
                 else:
-                    inverted = not inverted
-            else:
-                inverted = not inverted
-            coords.append((xpos, ypos, inverted))
-    return coords
+                    rspiral(t, S, F, sides=4)
+        t.setposition(t.xcor(), t.ycor() + S)
+
+def hex_tile(t, S, F, cols=1):
+    for c in range(cols):
+        with SavePosition(t):
+            t.right(120)
+            t.forward(S)
+            lspiral(t, S, F)
+        with SavePosition(t):
+            t.left(120)
+            t.forward(S)
+            t.right(60)
+            rspiral(t, S, F)
+        with SavePosition(t):
+            lspiral(t, S, F, sides=6)
+            t.right(120)
+            rspiral(t, S, F, sides=6)
+        t.forward(S)
+        with SavePosition(t):
+            rspiral(t, S, F)
+            t.right(60)
+            lspiral(t, S, F)
+        t.forward(S)
+
+def circle(t, S=0.5):
+    shape(t, S, sides=1000)
 
 screen = turtle.Screen()
 t = turtle.Turtle()
-t.speed(3)
 turtle.tracer(n=0, delay=None)
-t.color('black')
+# t.color('black')
+t.penup()
+t.goto((-1000, -1000))
 
-S = 150
+S = 100
 F = 10
-t.pendown()
 
-def hextile(t, S, F):
-    for i in range(6):
-        t.left(60)
-        if i % 2 == 0:
-            lspiral(t, S, F)
-        else:
-            rspiral(t, S, F)
-        
-hextile(t, S, F)
-for i in range(6):
-    with SavePosition(t):
-        t.setheading(i * 60)
-        t.penup()
-        t.forward(S * 1.5)
-        t.left(90)
-        t.forward(S * sin(rad(60)))
-        t.right(30)
-        t.pendown()
-        hextile(t, S, F)
+screen.colormode(255)
 
-
-
-#t.penup()
-#t.setposition(-200, -200)
-#t.pendown()
-#make_triangles(t, S, F, rows=2, cols=4)
-    
-#coords = make_grid(S, 4, 6)
-
-#for x, y, inverted in coords:
-#    t.penup()
-#    t.setx(x)
-#    t.sety(y)
-#    t.pendown()
-#    spiral(t, S, F, sides=4, inverted=inverted)
-#    turtle.update()
-#    time.sleep(0.25)
+quad_tile(t, S, F, 200, 200)
