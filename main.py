@@ -5,6 +5,8 @@ import itertools
 
 class SavePosition:
     def __init__(self, t):
+        self.t = t
+
         self.heading = t.heading()
         self.position = t.position()
 
@@ -12,10 +14,10 @@ class SavePosition:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        t.penup()
-        t.setheading(self.heading)
-        t.setposition(self.position)
-        t.pendown()
+        self.t.penup()
+        self.t.setheading(self.heading)
+        self.t.setposition(self.position)
+        self.t.pendown()
 
 
 def rad(deg):
@@ -42,6 +44,7 @@ def calc(S, F, sides=3):
     A = deg(asin(G/D))
     return A, D
 
+
 def lspiral(t, S, F, sides=3):
     with SavePosition(t):
         while int(S) > F:
@@ -49,6 +52,7 @@ def lspiral(t, S, F, sides=3):
             t.forward(F)
             A, S = calc(S, F, sides=sides)
             t.left(A)
+
 
 def rspiral(t, S, F, sides=3):
     angle = (sides - 2)*180 / sides
@@ -58,20 +62,6 @@ def rspiral(t, S, F, sides=3):
             t.forward(S - F)
             A, S = calc(S, F, sides=sides)
             t.left(180 - angle - A)
-
-def make_tri(t, S, rows, cols):
-    height = S * sin(rad(60))
-    coords = []
-    #(x, y, heading, spiral(r/l))
-    for c in range(cols):
-        for r in range(rows):
-            x = c * S
-            y = r * height
-            if r % 2 == 1:
-                heading = 120
-            else:
-                heading = 0
-            
 
 
 def tri_row(t, S, F, cols=1):
@@ -84,13 +74,13 @@ def tri_row(t, S, F, cols=1):
     
 def tri_tile(t, S, F, rows=1, cols=1):
     for r in range(rows):
-        with SavePosition(t):
-            tri_row(t, S, F, cols)
+        tri_row(t, S, F, cols)
         t.penup()
-        t.left(120)
+        rotate = 120 if r % 2 == 0 else 60
+        t.left(rotate)
         t.forward(S)
         t.pendown()
-        t.right(120)
+        t.right(rotate)
 
 def quad_tile(t, S, F, rows=1, cols=1):
     for r in range(rows):
@@ -103,41 +93,25 @@ def quad_tile(t, S, F, rows=1, cols=1):
                     rspiral(t, S, F, sides=4)
         t.setposition(t.xcor(), t.ycor() + S)
 
-def hex_tile(t, S, F, cols=1):
-    for c in range(cols):
-        with SavePosition(t):
-            t.right(120)
-            t.forward(S)
-            lspiral(t, S, F)
-        with SavePosition(t):
-            t.left(120)
-            t.forward(S)
-            t.right(60)
-            rspiral(t, S, F)
-        with SavePosition(t):
-            lspiral(t, S, F, sides=6)
-            t.right(120)
-            rspiral(t, S, F, sides=6)
-        t.forward(S)
-        with SavePosition(t):
-            rspiral(t, S, F)
-            t.right(60)
-            lspiral(t, S, F)
-        t.forward(S)
 
 def circle(t, S=0.5):
     shape(t, S, sides=1000)
 
-screen = turtle.Screen()
-t = turtle.Turtle()
-turtle.tracer(n=0, delay=None)
-# t.color('black')
-t.penup()
-t.goto((-1000, -1000))
 
-S = 100
-F = 10
+def write_drawing(screen, file_name, turtle_pos, t):
+    ts = turtle.getscreen()
+    ts.getcanvas().postscript(file=file_name)
+    t.goto(turtle_pos)
+    screen.clear()
 
-screen.colormode(255)
 
-quad_tile(t, S, F, 200, 200)
+def get_screen():
+    screen = turtle.Screen()
+    t = turtle.Turtle()
+    turtle.tracer(n=0, delay=None)
+    # t.color('black')
+    t.penup()
+    t.goto((-500, 0))
+    t.pendown()
+    screen.colormode(255)
+    return t
