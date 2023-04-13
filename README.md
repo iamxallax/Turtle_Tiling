@@ -34,7 +34,7 @@ tri_tile(t, S=120, F=10, rows=10, cols=10)
 
 turtle.done()
 ```
-![tri_tile](tri_tile.png "Tri tile")
+![tri_tile](Tri_tile.png "Tri tile")
 
 ## Square tiling:
 
@@ -60,7 +60,7 @@ quad_tile(t, S=120, F=10, rows=10, cols=10)
 turtle.done()
 ```
 
-![quad_tile](quad_tile.png "Quad tile")
+![quad_tile](Quad_tile.png "Quad tile")
 
 ## Hexagonal tiling:
 
