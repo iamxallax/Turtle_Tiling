@@ -3,6 +3,16 @@ import turtle
 import time
 import itertools
 
+class CleanMove:
+    def __init__(self, t):
+        self.t = t
+
+    def __enter__(self):
+       self.t.penup()
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.t.pendown()
+
 class SavePosition:
     def __init__(self, t):
         self.t = t
@@ -14,10 +24,9 @@ class SavePosition:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.t.penup()
-        self.t.setheading(self.heading)
-        self.t.setposition(self.position)
-        self.t.pendown()
+        with CleanMove(self.t):
+            self.t.setheading(self.heading)
+            self.t.setposition(self.position)
 
 
 def rad(deg):
@@ -63,25 +72,6 @@ def rspiral(t, S, F, sides=3):
             A, S = calc(S, F, sides=sides)
             t.left(180 - angle - A)
 
-
-def tri_row(t, S, F, cols=1):
-    for c in range(cols):
-        with SavePosition(t):
-            t.forward(c * S)
-            lspiral(t, S, F)
-            t.left(60)
-            rspiral(t, S, F)
-    
-def tri_tile(t, S, F, rows=1, cols=1):
-    for r in range(rows):
-        tri_row(t, S, F, cols)
-        t.penup()
-        rotate = 120 if r % 2 == 0 else 60
-        t.left(rotate)
-        t.forward(S)
-        t.pendown()
-        t.right(rotate)
-
 def quad_tile(t, S, F, rows=1, cols=1):
     for r in range(rows):
         for c in range(cols):
@@ -110,8 +100,7 @@ def get_screen():
     t = turtle.Turtle()
     turtle.tracer(n=0, delay=None)
     # t.color('black')
-    t.penup()
-    t.goto((-500, 0))
-    t.pendown()
+    with CleanMove(t):
+        t.goto((-500, -500))
     screen.colormode(255)
     return t

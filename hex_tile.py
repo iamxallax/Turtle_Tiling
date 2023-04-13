@@ -26,6 +26,9 @@ def hex_tile(t, S, F, cols=1):
         t.forward(S)
 
 t = get_screen()
+t.penup()
+t.goto(-500, 0)
+t.pendown
 hex_tile(t, S=120, F=10, cols=10)
 
 turtle.done()
