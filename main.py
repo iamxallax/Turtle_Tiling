@@ -72,18 +72,6 @@ def rspiral(t, S, F, sides=3):
             A, S = calc(S, F, sides=sides)
             t.left(180 - angle - A)
 
-def quad_tile(t, S, F, rows=1, cols=1):
-    for r in range(rows):
-        for c in range(cols):
-            with SavePosition(t):
-                t.forward(c * S)
-                if (r + c) % 2 == 0:
-                    lspiral(t, S, F, sides=4)
-                else:
-                    rspiral(t, S, F, sides=4)
-        t.setposition(t.xcor(), t.ycor() + S)
-
-
 def circle(t, S=0.5):
     shape(t, S, sides=1000)
 
