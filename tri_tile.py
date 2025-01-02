@@ -1,4 +1,4 @@
-import turtle
+from svg_turtle import SvgTurtle
 
 from main import SavePosition, rspiral, lspiral, get_screen
 
@@ -20,7 +20,8 @@ def tri_tile(t, S, F, rows=1, cols=1):
         t.pendown()
         t.right(rotate)
 
-t = get_screen()
-tri_tile(t, S=120, F=10, rows=10, cols=10)
 
-turtle.done()
+if __name__ == "__main__":
+    t = SvgTurtle(500, 500)
+    tri_tile(t, S=120, F=10, rows=20, cols=20)
+    t.save_as('image.svg')

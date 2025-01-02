@@ -1,7 +1,5 @@
 from math import sin, cos, pi, asin
-import turtle
-import time
-import itertools
+from svg_turtle import SvgTurtle
 
 class CleanMove:
     def __init__(self, t):
@@ -76,19 +74,8 @@ def circle(t, S=0.5):
     shape(t, S, sides=1000)
 
 
-def write_drawing(screen, file_name, turtle_pos, t):
-    ts = turtle.getscreen()
-    ts.getcanvas().postscript(file=file_name)
-    t.goto(turtle_pos)
-    screen.clear()
-
-
 def get_screen():
-    screen = turtle.Screen()
-    t = turtle.Turtle()
-    turtle.tracer(n=0, delay=None)
-    # t.color('black')
+    t = SvgTurtle(1000, 1000)
     with CleanMove(t):
         t.goto((-500, -500))
-    screen.colormode(255)
     return t

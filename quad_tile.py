@@ -1,4 +1,4 @@
-import turtle
+from svg_turtle import SvgTurtle
 
 from main import SavePosition, rspiral, lspiral, get_screen
 
@@ -13,7 +13,7 @@ def quad_tile(t, S, F, rows=1, cols=1):
                     rspiral(t, S, F, sides=4)
         t.setposition(t.xcor(), t.ycor() + S)
 
-t = get_screen()
-quad_tile(t, S=120, F=10, rows=10, cols=10)
-
-turtle.done()
+if __name__ == "__main__":
+    t = get_screen()
+    quad_tile(t, S=120, F=10, rows=10, cols=10)
+    t.save_as('image.svg')
