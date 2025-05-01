@@ -34,9 +34,4 @@ with st.sidebar:
         f.flush()
         st.session_state.img = f.read()
 
-    # with open(st.session_state.tiling + '.svg', 'w+') as f:
-    #     t.save_as(f.name)
-    #     f.flush()
-    #     st.session_state.img = f.read()
-
 st.image(st.session_state.img)
