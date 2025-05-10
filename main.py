@@ -1,4 +1,4 @@
-from math import sin, cos, pi, asin
+from math import sin, cos, pi, asin, ceil
 from svg_turtle import SvgTurtle
 
 class CleanMove:
@@ -52,23 +52,31 @@ def calc(S, F, sides=3):
     return A, D
 
 
-def lspiral(t, S, F, sides=3):
+def lspiral(t, S, F, scol:tuple, ecol:tuple, sides=3, color_steps = 20):
+    cur_color = scol
     with SavePosition(t):
+        change = (lambda scol, ecol, steps: tuple(((scol[i] - ecol[i]) / steps for i, z in enumerate(scol))))(scol, ecol, color_steps)
         while int(S) > F:
+            t.color(cur_color)
             shape(t, S, sides=sides)
             t.forward(F)
             A, S = calc(S, F, sides=sides)
             t.left(A)
+            cur_color = tuple(map(lambda value, change_val: value - change_val, cur_color, change))
 
 
-def rspiral(t, S, F, sides=3):
+def rspiral(t, S, F, scol:tuple, ecol:tuple, sides=3, color_steps = 20):
     angle = (sides - 2)*180 / sides
+    cur_color = scol
     with SavePosition(t):
+        change = (lambda scol, ecol, steps: tuple(((scol[i] - ecol[i]) / steps for i, z in enumerate(scol))))(scol, ecol, color_steps)
         while int(S) > F:
+            t.color(cur_color)
             shape(t, S, sides=sides)
             t.forward(S - F)
             A, S = calc(S, F, sides=sides)
             t.left(180 - angle - A)
+            cur_color = tuple(map(lambda value, change_val: value - change_val, cur_color, change))
 
 def circle(t, S=0.5):
     shape(t, S, sides=1000)
