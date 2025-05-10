@@ -19,15 +19,17 @@ with st.sidebar:
     st.slider('Step (\% of Side Length)', min_value=1, max_value=32, value=8, step=1, key='step')
     st.slider('Rows', min_value=1, max_value=20, value=10, step=1, key='rows')
     st.slider('Columns', min_value=1, max_value=20, value=10, step=1, key='cols')
+    st.color_picker('Start Color', '#000000', key='scol')
+    st.color_picker('End Color', '#000000', key='ecol')
 
 
 
     if st.session_state.tiling == 'Triangle':
-        tri_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=(255, 0, 0), ecol=(0, 255, 0), rows=st.session_state.rows, cols=st.session_state.cols)
+        tri_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=st.session_state.scol, ecol=st.session_state.ecol, rows=st.session_state.rows, cols=st.session_state.cols)
     if st.session_state.tiling == 'Square':
-        quad_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, rows=st.session_state.rows, cols=st.session_state.cols)
+        quad_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=st.session_state.scol, ecol=st.session_state.ecol, rows=st.session_state.rows, cols=st.session_state.cols)
     if st.session_state.tiling == 'Hexagon':
-        hex_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, rows=st.session_state.rows, cols=st.session_state.cols)
+        hex_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=st.session_state.scol, ecol=st.session_state.ecol, rows=st.session_state.rows, cols=st.session_state.cols)
 
     with NamedTemporaryFile('w+') as f:
         t.save_as(f.name)
