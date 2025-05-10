@@ -23,14 +23,14 @@ with st.sidebar:
     st.color_picker('End Color', '#000000', key='ecol')
 
 
-    st.session_state.scol = tuple(int(st.session_state.scol[i:i+2], 16) for i in (1, 3, 5))
-    st.session_state.ecol = tuple(int(st.session_state.ecol[i:i+2], 16) for i in (1, 3, 5))
+    scol = tuple(int(st.session_state.scol[i:i+2], 16) for i in (1, 3, 5))
+    ecol = tuple(int(st.session_state.ecol[i:i+2], 16) for i in (1, 3, 5))
     if st.session_state.tiling == 'Triangle':
-        tri_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=st.session_state.scol, ecol=st.session_state.ecol, rows=st.session_state.rows, cols=st.session_state.cols)
+        tri_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=scol, ecol=ecol, rows=st.session_state.rows, cols=st.session_state.cols)
     if st.session_state.tiling == 'Square':
-        quad_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=st.session_state.scol, ecol=st.session_state.ecol, rows=st.session_state.rows, cols=st.session_state.cols)
+        quad_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=scol, ecol=ecol, rows=st.session_state.rows, cols=st.session_state.cols)
     if st.session_state.tiling == 'Hexagon':
-        hex_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=st.session_state.scol, ecol=st.session_state.ecol, rows=st.session_state.rows, cols=st.session_state.cols)
+        hex_tile(t, S=st.session_state.len, F=(st.session_state.len / 100) * st.session_state.step, scol=scol, ecol=ecol, rows=st.session_state.rows, cols=st.session_state.cols)
 
     with NamedTemporaryFile('w+') as f:
         t.save_as(f.name)
