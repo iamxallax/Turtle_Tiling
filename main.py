@@ -52,12 +52,15 @@ def calc(S, F, sides=3):
     return A, D
 
 
-def lspiral(t, S, F, scol:tuple, ecol:tuple, sides=3, color_steps = 20):
+def lspiral(t, S, F, scol:tuple, ecol:tuple, sides=3):
+    color_steps = ceil(S / F)
     cur_color = scol
     with SavePosition(t):
         change = (lambda scol, ecol, steps: tuple(((scol[i] - ecol[i]) / steps for i, z in enumerate(scol))))(scol, ecol, color_steps)
         while int(S) > F:
-            t.color(cur_color)
+            cur_color = tuple(map(lambda x: int(x), cur_color))
+            print(cur_color)
+            t.color(f'#{cur_color[0]:02X}{cur_color[1]:02X}{cur_color[2]:02X}')
             shape(t, S, sides=sides)
             t.forward(F)
             A, S = calc(S, F, sides=sides)
@@ -65,13 +68,16 @@ def lspiral(t, S, F, scol:tuple, ecol:tuple, sides=3, color_steps = 20):
             cur_color = tuple(map(lambda value, change_val: value - change_val, cur_color, change))
 
 
-def rspiral(t, S, F, scol:tuple, ecol:tuple, sides=3, color_steps = 20):
+def rspiral(t, S, F, scol:tuple, ecol:tuple, sides=3):
+    color_steps = ceil(S / F)
     angle = (sides - 2)*180 / sides
     cur_color = scol
     with SavePosition(t):
         change = (lambda scol, ecol, steps: tuple(((scol[i] - ecol[i]) / steps for i, z in enumerate(scol))))(scol, ecol, color_steps)
         while int(S) > F:
-            t.color(cur_color)
+            cur_color = tuple(map(lambda x: int(x), cur_color))
+            print(cur_color)
+            t.color(f'#{cur_color[0]:02X}{cur_color[1]:02X}{cur_color[2]:02X}')
             shape(t, S, sides=sides)
             t.forward(S - F)
             A, S = calc(S, F, sides=sides)

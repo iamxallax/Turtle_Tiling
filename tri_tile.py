@@ -23,5 +23,5 @@ def tri_tile(t, S, F, scol, ecol, rows=1, cols=1):
 
 if __name__ == "__main__":
     t = SvgTurtle(500, 500)
-    tri_tile(t, S=120, F=10, rows=20, cols=20)
+    tri_tile(t, S=120, F=10, scol=(255, 0, 0), ecol=(0, 255, 0), rows=20, cols=20)
     t.save_as('image.svg')
