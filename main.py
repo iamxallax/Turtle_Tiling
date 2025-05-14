@@ -1,5 +1,8 @@
 from math import sin, cos, pi, asin, ceil
 from svg_turtle import SvgTurtle
+import seaborn as sns
+import numpy as np
+from numpy import astype
 
 class CleanMove:
     def __init__(self, t):
@@ -52,37 +55,51 @@ def calc(S, F, sides=3):
     return A, D
 
 
-def lspiral(t, S, F, scol:tuple, ecol:tuple, sides=3):
+def lspiral(t, S, F, colormap, sides=3):
     color_steps = ceil(S / F)
-    cur_color = scol
+    # Calculate the normalized values to sample the colormap
+    # indices = [i / (color_steps - 1) for i in range(color_steps)]
+    # # Get RGB tuples (in range 0-255) from the colormap
+    # colors = [tuple(int(255 * c) for c in colormap(val)[:3]) for val in indices]
+    colors = list(map(list, map(lambda x: map(lambda x: int(x * 255), x), list(colormap(np.linspace(0, 1, color_steps))))))
+
+
     with SavePosition(t):
-        change = (lambda scol, ecol, steps: tuple(((scol[i] - ecol[i]) / steps for i, z in enumerate(scol))))(scol, ecol, color_steps)
+        step = 1
         while int(S) > F:
-            cur_color = tuple(map(lambda x: int(x), cur_color))
-            print(cur_color)
+            # Use the corresponding precomputed color
+            cur_color = colors[min(step, len(colors) - 1)]
             t.color(f'#{cur_color[0]:02X}{cur_color[1]:02X}{cur_color[2]:02X}')
             shape(t, S, sides=sides)
             t.forward(F)
             A, S = calc(S, F, sides=sides)
-            t.left(A)
-            cur_color = tuple(map(lambda value, change_val: value - change_val, cur_color, change))
+            t.left(A)   
+            step += 1
 
 
-def rspiral(t, S, F, scol:tuple, ecol:tuple, sides=3):
+def rspiral(t, S, F, colormap, sides=3):
     color_steps = ceil(S / F)
-    angle = (sides - 2)*180 / sides
-    cur_color = scol
+    angle = (sides - 2) * 180 / sides
+
+    # Generate color samples from the colormap
+    # indices = [i / (color_steps - 1) for i in range(color_steps)]
+    # colors = [tuple(int(255 * c) for c in colormap(val)[:3]) for val in indices]
+    colors = list(map(list, map(lambda x: map(lambda x: int(x * 255), x), list(colormap(np.linspace(0, 1, color_steps))))))
+    # colors = list(
+    #     map(list, map(
+    #         lambda x: int(255 * x), colormap(
+    #             np.linspace(0, 1, color_steps)))))
+
     with SavePosition(t):
-        change = (lambda scol, ecol, steps: tuple(((scol[i] - ecol[i]) / steps for i, z in enumerate(scol))))(scol, ecol, color_steps)
+        step = 0
         while int(S) > F:
-            cur_color = tuple(map(lambda x: int(x), cur_color))
-            print(cur_color)
+            cur_color = colors[min(step, len(colors) - 1)]
             t.color(f'#{cur_color[0]:02X}{cur_color[1]:02X}{cur_color[2]:02X}')
             shape(t, S, sides=sides)
             t.forward(S - F)
             A, S = calc(S, F, sides=sides)
             t.left(180 - angle - A)
-            cur_color = tuple(map(lambda value, change_val: value - change_val, cur_color, change))
+            step += 1
 
 def circle(t, S=0.5):
     shape(t, S, sides=1000)

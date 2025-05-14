@@ -1,2 +1,5 @@
 streamlit
 svg_turtle
+seaborn
+pandas
+matplotlib
